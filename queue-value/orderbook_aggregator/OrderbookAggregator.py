@@ -1,5 +1,4 @@
 import abc
-import itertools
 import numpy as np
 
 
@@ -11,5 +10,5 @@ class OrderbookAggregator(metaclass=abc.ABCMeta):
 
     @property
     @abc.abstractmethod
-    def orderbook_states(self) -> itertools.product:
+    def orderbook_states(self) -> np.array:
         pass

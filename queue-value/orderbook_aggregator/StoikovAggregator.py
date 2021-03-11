@@ -76,9 +76,9 @@ class StoikovAggregator(OrderbookAggregator):
         )
 
     @property
-    def orderbook_states(self) -> List[tuple]:
+    def orderbook_states(self) -> np.array:
         imbalance_decimals = int(round(abs(np.log(self.imbalance_step_size) / np.log(10))))
-        return [(round(x, imbalance_decimals), y) for x in self.imbalance_steps for y in self.spread_steps]
+        return np.array([(round(x, imbalance_decimals), y) for x in self.imbalance_steps for y in self.spread_steps])
 
     def absorbing_states(self) -> Tuple[csc_matrix, pd.Series]:
         orderbook_states_dict = dict(zip(self.orderbook_states, range(len(self.orderbook_states))))
