@@ -71,9 +71,7 @@ class StoikovAggregator(OrderbookAggregator):
     @property
     def mid_price_steps(self) -> np.array:
         max_value = 2 * self.max_spread
-        return np.setdiff1d(
-            0.5 * np.arange(-max_value, max_value + self.spread_step_size, self.spread_step_size), [0]
-        )
+        return np.setdiff1d(0.5 * np.arange(-max_value, max_value + self.spread_step_size, self.spread_step_size), [0])
 
     @property
     def orderbook_states(self) -> np.array:

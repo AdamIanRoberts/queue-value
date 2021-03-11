@@ -194,6 +194,6 @@ class StoikovMicroPrice:
         micro_price = micro_price.todense().reshape((len(self.imbalance_steps), len(self.spread_steps)))
         return pd.DataFrame(
             data=np.real(micro_price),
-            index=[round(x*10) / 10 for x in self.imbalance_steps],
-            columns=self.spread_steps
+            index=[round(x * 10) / 10 for x in self.imbalance_steps],
+            columns=self.spread_steps,
         )
