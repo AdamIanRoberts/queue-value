@@ -47,21 +47,21 @@ class StoikovAggregator(OrderbookAggregator):
         return self._process_raw_orderbook(raw_orderbook)
 
     @property
-    def time_steps(self) -> np.array:
+    def time_steps(self) -> list:
         step_size = timedelta(milliseconds=self.time_step_size)
         start_time = max(self.start_time, min(self.raw_orderbook["datetime"]))
         end_time = min(self.end_time, max(self.raw_orderbook["datetime"]))
-        return pd.date_range(start_time, end_time, freq=step_size)
+        return list(pd.date_range(start_time, end_time, freq=step_size))
 
     @property
-    def imbalance_steps(self) -> np.array:
+    def imbalance_steps(self) -> list:
         imbalance_steps = np.arange(0, 1 + self.imbalance_step_size, self.imbalance_step_size)
         if not self.imbalance_end_points:
             imbalance_steps = imbalance_steps[1:-1]
         return imbalance_steps
 
     @property
-    def spread_steps(self) -> np.array:
+    def spread_steps(self) -> list:
         return np.arange(
             self.spread_step_size,
             self.max_spread + self.spread_step_size,
@@ -69,14 +69,14 @@ class StoikovAggregator(OrderbookAggregator):
         )
 
     @property
-    def mid_price_steps(self) -> np.array:
+    def mid_price_steps(self) -> list:
         max_value = 2 * self.max_spread
         return np.setdiff1d(0.5 * np.arange(-max_value, max_value + self.spread_step_size, self.spread_step_size), [0])
 
     @property
-    def orderbook_states(self) -> np.array:
+    def orderbook_states(self) -> list:
         imbalance_decimals = int(round(abs(np.log(self.imbalance_step_size) / np.log(10))))
-        return np.array([(round(x, imbalance_decimals), y) for x in self.imbalance_steps for y in self.spread_steps])
+        return [(round(x, imbalance_decimals), y) for x in self.imbalance_steps for y in self.spread_steps]
 
     def absorbing_states(self) -> Tuple[csc_matrix, pd.Series]:
         orderbook_states_dict = dict(zip(self.orderbook_states, range(len(self.orderbook_states))))
