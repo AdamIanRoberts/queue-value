@@ -14,7 +14,7 @@ class ImbalanceQueueOrderValue:
         self.imbalance_orderbooks = imbalance_orderbooks
         assert (
             len(self.imbalance_orderbooks) > 0
-        ), "ImbalanceQueueValue must be instantiated with at least one ImbalanceQueueValueOrderbook"
+        ), "ImbalanceQueueOrderValue must be instantiated with at least one ImbalanceQueueAggregator"
         self.spread_size = self.imbalance_orderbooks[0].spread_size
         self.orderbook_absorbing_states = self.imbalance_orderbooks[0].orderbook_absorbing_states
         self.orderbook_transient_states = self.imbalance_orderbooks[0].orderbook_transient_states
