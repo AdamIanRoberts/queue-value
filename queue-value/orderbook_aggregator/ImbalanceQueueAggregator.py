@@ -17,8 +17,8 @@ class ImbalanceQueueAggregator(OrderbookAggregator):
         spread_size: float,
         imbalance_step_size: Optional[float] = 0.1,
         imbalance_end_points: bool = True,
-        queue_position_step_size: Optional[float] = 100,
-        max_queue_position: float = 1_000,
+        queue_position_step_size: Optional[float] = 300,
+        max_queue_position: float = 3_000,
     ):
         self.date = date
         self.ticker = ticker
@@ -41,7 +41,6 @@ class ImbalanceQueueAggregator(OrderbookAggregator):
         self.date = min(raw_orderbook["datetime"]).date()
         return raw_orderbook
 
-    @property
     def time_steps(self) -> list:
         step_size = timedelta(milliseconds=self.time_step_size)
         start_time = max(self.start_time, min(self.raw_orderbook["datetime"]))
