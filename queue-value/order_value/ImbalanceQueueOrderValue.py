@@ -33,22 +33,24 @@ class ImbalanceQueueOrderValue:
         self.transient_count: Dict[tuple, Dict[tuple, float]] = {
             s_0: {s_1: 0 for s_1 in self.orderbook_transient_states} for s_0 in self.orderbook_starting_states
         }
-        for imbalance_ob in tqdm(self.imbalance_orderbooks):
-            for idx, row in imbalance_ob.orderbook.iterrows():
-                state_changes = self._next_states(row, imbalance_ob)
+        for orderbook in tqdm(self.imbalance_orderbooks):
+            for idx, row in orderbook.orderbook.iterrows():
+                state_changes = self._next_states(row, orderbook)
                 for k, v in state_changes.items():
-                    if v[0] == imbalance_ob.spread_size:
+                    if v[0] > 0:
                         # tick up so we get filled
-                        self.absorbing_count[(0.0, k[1], k[2])][(imbalance_ob.spread_size, v[1], 0.0)] += 1
+                        self.absorbing_count[k][(v[0], v[1], 0.0)] += 1
+                    elif v[0] == 0:
+                        # no mid-price move
+                        if v[2] == 0:
+                            self.absorbing_count[k][v] += 1
+                        else:
+                            self.transient_count[k][v] += 1
                     else:
-                        try:
-                            self.transient_count[(0.0, k[1], k[2])][v] += 1
-                        except KeyError:
-                            if v[2] > 0:
-                                # tick down and we did not get filled
-                                self.absorbing_count[(0.0, k[1], k[2])][(-imbalance_ob.spread_size, -1, -1)] += 1
-                            else:
-                                self.absorbing_count[(0.0, k[1], k[2])][v] += 1
+                        if v[2] == 0:
+                            self.absorbing_count[k][v] += 1
+                        else:  # tick down and we did not get filled
+                            self.absorbing_count[k][(-orderbook.spread_size, -1, -1)] += 1
         absorbing_df = pd.DataFrame.from_dict(self.absorbing_count).T
         transient_df = pd.DataFrame.from_dict(self.transient_count).T
         all_df = transient_df.join(absorbing_df)
@@ -77,7 +79,7 @@ class ImbalanceQueueOrderValue:
     @classmethod
     def _next_states(cls, row: pd.Series, imbalance_orderbook: ImbalanceQueueAggregator) -> Dict[tuple, tuple]:
         return {
-            (row["prev_mid_move"], row["imbalance"], q): (
+            (0.0, row["imbalance"], q): (
                 row["mid_price_move"],
                 row["next_imbalance"],
                 cls._calculate_next_queue_position(
