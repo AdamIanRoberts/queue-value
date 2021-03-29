@@ -72,7 +72,6 @@ class ImbalancePriceDeltaQueueAggregator(OrderbookAggregator):
 
     @property
     def orderbook_states(self) -> list:
-        # imbalance_decimals = int(round(abs(np.log(self.imbalance_step_size) / np.log(10))))
         return [
             (w, x, y, z)
             for w in self.mid_price_steps
@@ -83,7 +82,6 @@ class ImbalancePriceDeltaQueueAggregator(OrderbookAggregator):
 
     @property
     def orderbook_starting_states(self) -> list:
-        # imbalance_decimals = int(round(abs(np.log(self.imbalance_step_size) / np.log(10))))
         return [
             (0.0, x, y, z)
             for x in self.imbalance_steps
@@ -94,7 +92,6 @@ class ImbalancePriceDeltaQueueAggregator(OrderbookAggregator):
 
     @property
     def orderbook_absorbing_states(self) -> list:
-        # imbalance_decimals = int(round(abs(np.log(self.imbalance_step_size) / np.log(10))))
         return [
             (w, x, y, z)
             for w in self.mid_price_steps  # Separate case where mid-price move == -spread_size (?)
@@ -108,7 +105,6 @@ class ImbalancePriceDeltaQueueAggregator(OrderbookAggregator):
 
     @property
     def orderbook_transient_states(self) -> list:
-        # imbalance_decimals = int(round(abs(np.log(self.imbalance_step_size) / np.log(10))))
         return [
             (0.0, x, y, z)
             for x in self.imbalance_steps
