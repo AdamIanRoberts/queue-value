@@ -19,8 +19,8 @@ class ImbalancePriceDeltaQueueAggregator(OrderbookAggregator):
         imbalance_end_points: bool = True,
         price_delta_window: int = 1000,
         max_price_delta: int = 200,
-        queue_position_step_size: Optional[float] = 100,
-        max_queue_position: float = 1_000,
+        queue_position_step_size: Optional[float] = 300,
+        max_queue_position: float = 3_000,
     ):
         self.date = date
         self.ticker = ticker
