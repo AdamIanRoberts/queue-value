@@ -119,7 +119,7 @@ class ImbalanceQueueAggregator(OrderbookAggregator):
 
     def _discretise_orderbook(self):
         orderbook = self.raw_orderbook.drop_duplicates(["datetime"], keep="last").set_index("datetime")
-        orderbook = orderbook.reindex(self.time_steps, method="ffill")
+        orderbook = orderbook.reindex(self.time_steps(), method="ffill")
         orderbook["imbalance"] = self._calculate_discrete_imbalance(orderbook["imbalance"])
         orderbook["next_imbalance"] = orderbook["imbalance"].shift(-1)
         orderbook["mid_price"] = self._calculate_discrete_mid_price(orderbook["mid_price"])
