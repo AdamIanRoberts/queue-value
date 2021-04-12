@@ -153,7 +153,7 @@ class ImbalanceQueueAggregator(OrderbookAggregator):
             data=np.array(
                 [
                     event_quantities["event_(1, 1)"].values,
-                    event_quantities["event_(-1, 2)"].values,
+                    event_quantities["event_(-1, 1)"].values,
                     (event_quantities["event_(1, 2)"] + event_quantities["event_(1, 3)"]).values,
                     (event_quantities["event_(-1, 2)"] + event_quantities["event_(-1, 3)"]).values,
                     (event_quantities["event_(-1, 4)"] + event_quantities["event_(-1, 5)"]).values,
