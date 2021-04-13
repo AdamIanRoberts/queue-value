@@ -52,6 +52,7 @@ class ImbalancePriceDeltaQueueOrderValue2:
         self.transient_prob_df = transient_df.div(all_df.sum(axis=1), axis=0).fillna(0)
 
     def calculate_order_values(self, strat_1_order_vals: List[float]) -> pd.DataFrame:
+        # * 0.9999 to ensure invertibility
         transient_sum = identity(len(self.transient_prob_df.columns)).todense() * 0.9999 - self.transient_prob_df.values
         inv_trans_sum = pd.DataFrame(
             index=self.transient_prob_df.index,
