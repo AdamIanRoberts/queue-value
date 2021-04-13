@@ -52,7 +52,7 @@ class ImbalancePriceDeltaQueueOrderValue2:
         self.transient_prob_df = transient_df.div(all_df.sum(axis=1), axis=0).fillna(0)
 
     def calculate_order_values(self, strat_1_order_vals: List[float]) -> pd.DataFrame:
-        transient_sum = identity(len(self.transient_prob_df.columns)).todense() - self.transient_prob_df.values
+        transient_sum = identity(len(self.transient_prob_df.columns)).todense() * 0.9999 - self.transient_prob_df.values
         inv_trans_sum = pd.DataFrame(
             index=self.transient_prob_df.index,
             columns=self.transient_prob_df.columns,
@@ -73,7 +73,7 @@ class ImbalancePriceDeltaQueueOrderValue2:
                 cls._calculate_next_queue_position(q, row["cancel_sell"], row["ask_size_0"], orderbook),
             )
             for q in orderbook.queue_position_steps
-            if (row["ask_size_0"] + orderbook.queue_position_step_size) > q > 0
+            if (row["ask_size_1"] + orderbook.queue_position_step_size) > q > 0
         }
 
     @staticmethod
